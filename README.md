@@ -23,3 +23,7 @@ Existem vários tipos de cluster. Os mais conhecidos são:
 
 
 
+
+# Referências
+> Esse é um bloco de citação.
+
