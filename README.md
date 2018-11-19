@@ -22,8 +22,22 @@ Existem vários tipos de cluster. Os mais conhecidos são:
 # Sistema Proposto
 
 
+## Arquitetura
+
+
+## Funcionamento
+
+
+## Resultados
+
+
+## Screenshots
 
 
 # Referências
-> Esse é um bloco de citação.
+> IEEE Technical Committee on Scalable Computing (TCSC)
+
+> Reliable Scalable Cluster Technology (RSCT), IBM Knowledge Center 
+
+> Large-scale cluster management at Google with Borg. Por Abhishek Verma, Luis Pedrosa, Madhukar Korupolu, David Oppenheimer, Eric Tune e John Wilkes, abril de 2015.
 
