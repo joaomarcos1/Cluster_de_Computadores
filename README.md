@@ -33,6 +33,17 @@ Existem vários tipos de cluster. Os mais conhecidos são:
 
 ## Screenshots
 
+Cliente
+![GitHub Logo](/img/cliente.PNG)
+
+Master (Tela Principal)
+![GitHub Logo](/img/master_01.PNG)
+
+Master (Tela Adicionar Nós)
+![GitHub Logo](/img/master_02.PNG)
+
+Cluster(Nós)
+![GitHub Logo](/img/Cluster.PNG)
 
 # Referências
 > IEEE Technical Committee on Scalable Computing (TCSC)
