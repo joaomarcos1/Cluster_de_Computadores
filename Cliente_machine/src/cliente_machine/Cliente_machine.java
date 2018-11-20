@@ -22,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -38,9 +39,13 @@ public class Cliente_machine extends JFrame{
     //criando o arquivo gson
     Gson gson = new Gson();
     int codigo   = 1;
-    ArrayList<String> palavras = new ArrayList<>();
+    ArrayList<String> palavras_enviada = new ArrayList<>();
     String texto_enviar;//string que recebe o texto busacado
     int porta;
+    
+    public String getTxt(){
+        return texto_enviar;
+    }
     
     JLabel nome_cliente = new JLabel("Cliente");
     
@@ -64,6 +69,8 @@ public class Cliente_machine extends JFrame{
     private Socket cliente1;
     
     public Cliente_machine(){
+        
+        
         
         JPanel tela = new JPanel();
         tela.setLayout(null);
@@ -116,10 +123,10 @@ public class Cliente_machine extends JFrame{
                        String a = palavra.getText();
                        palavras_adicionadas.insert(a, palavras_adicionadas.getCaretPosition());
                        palavras_adicionadas.append("\n");
-                       palavras.add(palavra.getText());
+                       palavras_enviada.add(palavra.getText());
                        Modelo modelo1 = new Modelo();
-                       modelo1.setPalavras(palavras);
-                       System.out.println(palavras);
+                       modelo1.setpalavras(palavras_enviada);
+                       System.out.println(palavras_enviada);
                    }
                    palavra.setText("");           
 
@@ -146,8 +153,13 @@ public class Cliente_machine extends JFrame{
                         enviar_arquivo_gson();
                         
                         Resultado rst = new Resultado();
+                        texto.setText("");
+                        palavras_adicionadas.setText("");
                         //palavras.add(texto.getText());
                        //Texto_enviar.add(texto.getText());
+                       
+                   }else {//CASO ALGUM CAMPO ESTEJA VAZIO
+                        JOptionPane.showMessageDialog(null,"Preencha todos os campos !!", "ERRO!",JOptionPane.WARNING_MESSAGE);
                    }
                                
 
@@ -165,44 +177,45 @@ public class Cliente_machine extends JFrame{
     }
     public void enviar_arquivo_gson(){
         
-        codigo = 1;
-        porta = 9002;
-        //criando o modelo para transformar em Json
-        Modelo modelo1 = new Modelo(codigo, palavras, texto_enviar, porta);
-        String json    = "";
-        //transformando o modelo em Json
-        json = gson.toJson(modelo1);
-        System.out.println("Modelo transformado em Json: " + json);
         
-        try {
-            System.out.println("ascasas");
-            Socket cliente = new Socket("10.0.0.102", 9000);
+        Thread tsensor3 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                codigo = 1;
+                porta = 9002;
+                //criando o modelo para transformar em Json
+                Modelo modelo1 = new Modelo(codigo, palavras_enviada, texto_enviar, 9002);
+                String json    = "";
+                //transformando o modelo em Json
+                json = gson.toJson(modelo1);
+                System.out.println("Modelo transformado em Json: " + json);
             
-            System.out.println("Enviando ");
+                try {
+                
+                    Socket cliente = new Socket("192.168.0.116", 9000);
+                    System.out.println("Enviando ");
+                    PrintStream saida = new PrintStream(cliente.getOutputStream());
 
-            PrintStream saida = new PrintStream(cliente.getOutputStream());
-
-            //ABAIXO ENVIAR texto e as palavras que deseja buscar
-            //
-            //
-            System.out.println("envia caralho");
-            saida.print(json);
-            System.out.println("Resposta enviada");
-            saida.close();
-            cliente.close();
-            System.out.println("Deu certo porra!!!");
+                    saida.print(json);
+            
+                    saida.close();
+                    cliente.close();
+                    System.out.println("Arquivo enviado!!!");
                            
-        } catch (IOException ex) {
-            Logger.getLogger(Cliente_machine.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                } catch (IOException ex) {
+                    Logger.getLogger(Cliente_machine.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        tsensor3.start();
         
     }
    
     public static void main(String[] args) {
        
         //new Cliente_machine();
-        //new Cliente_machine();
-        Resultado rst = new Resultado();
+        new Cliente_machine();
+        //Resultado rst = new Resultado();
     }
     
 }

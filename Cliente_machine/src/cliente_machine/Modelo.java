@@ -5,6 +5,7 @@
  */
 package cliente_machine;
 
+import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Int;
 import java.util.ArrayList;
 
 /**
@@ -13,28 +14,28 @@ import java.util.ArrayList;
  */
 public class Modelo {
     
-    private int               Codigo;
-    private ArrayList<String> Palavras;
-    private ArrayList<String> palavra;
-    private String            Texto_enviar;
+    private int               codigo;
+    private ArrayList<String> palavras;
+    private String            texto;
     private ArrayList<String> vezesPalavra;
+    //private ArrayList<Int> valores;
 
  
     //private String            quantidade;
-    private int               Porta;
+    private int               portaCliente;
     
     public Modelo(){}
     
     public Modelo(int Codigo, ArrayList<String> Palavras, String Texto_enviar, int Porta){
-        this.Codigo   = Codigo;
-        this.Palavras = Palavras;
-        this.Texto_enviar = Texto_enviar;
-        this.Porta = Porta;
+        this.codigo   = Codigo;
+        this.palavras = Palavras;
+        this.texto = Texto_enviar;
+        this.portaCliente = Porta;
     }
 
     Modelo(ArrayList<String> palavras, ArrayList<String> vezesPalavra) {
        
-        this.Palavras = Palavras;
+        this.palavras = this.palavras;
         this.vezesPalavra = vezesPalavra;
     }
 
@@ -47,35 +48,36 @@ public class Modelo {
     }
    
     Modelo(ArrayList<String> palavras) {
-        this.Palavras = Palavras;
+        this.palavras = this.palavras;
+    }
+    
+     public ArrayList<String> getpalavras() {        
+        return palavras;
+    }
+    
+    public void setpalavras(ArrayList<String> palavras) {
+        this.palavras = palavras;
     }
     
     public int getCodigo(){
-        return Codigo;
+        return codigo;
     }
     public void setCodigo(int Codigo) {
-        this.Codigo = Codigo;
+        this.codigo = Codigo;
     }
     public int getPorta(){
-        return Porta;
+        return portaCliente;
     }
     public void setPorta(int Porta) {
-        this.Porta = Porta;
+        this.portaCliente = Porta;
     }
     
-   public ArrayList<String> getPalavras() {
-        return palavra;
-    }
-
-    public void setPalavras(ArrayList<String> palavra) {
-        this.palavra = palavra;
-    }
-
+   
     public String getTexto_enviar(){
-        return Texto_enviar;
+        return texto;
     }
     public void setTexto_enviar(String Texto_enviar) {
-        this.Texto_enviar = Texto_enviar;
+        this.texto = Texto_enviar;
     }
    
 

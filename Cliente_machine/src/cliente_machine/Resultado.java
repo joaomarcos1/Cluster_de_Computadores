@@ -28,6 +28,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -46,11 +47,14 @@ public class Resultado extends JFrame {
     
     JScrollPane barraRolagem ;
      
-    JLabel nome_palavra = new JLabel("Informe a palavra que deseja verificar");
+    JLabel nome_palavra = new JLabel("Endereço IP conectado");
     JTextField palavra = new JTextField();
     
     JLabel nome_resultado = new JLabel("Resultado");
     JTextArea resultado = new JTextArea();
+    
+    JLabel nome_texto = new JLabel("Texto");
+    JTextArea txt = new JTextArea();
     
     JButton verificar = new JButton("Verificar");
     JButton adicionar = new JButton("Adicionar");
@@ -59,13 +63,14 @@ public class Resultado extends JFrame {
     
     JButton voltar = new JButton("Voltar");
     
-    Object [][] objeto;
-    JTable tabela;
+    //Object [][] objeto;
+    //JTable tabela;
     JScrollPane barraRolagem1;
-  
     
-    ArrayList<Modelo> tema = new ArrayList<>();
-    String [] colunas = new String[]{"Palavras", "Total de Repetições"};
+   //DefaultTableModel modelo = new DefaultTableModel();
+    
+   // ArrayList<Modelo> tema = new ArrayList<>();
+   // String [] colunas = new String[]{"Palavras", "Total de Repetições"};
     
     JPanel tela = new JPanel();
         
@@ -75,25 +80,53 @@ public class Resultado extends JFrame {
         tela.setBackground(Color.white);
         
         tela.add(palavra);
-        palavra.setBounds(50, 100, 250, 32);
+        palavra.setBounds(50, 50, 250, 32);
         palavra.setEditable(false);
 
         tela.add(nome_palavra);
-        nome_palavra.setBounds(50, 60, 250, 30);
+        nome_palavra.setBounds(50, 10, 250, 30);
         
         tela.add(nome_resultado);
-        nome_resultado.setBounds(50, 150, 350, 40);
+        nome_resultado.setBounds(50, 80, 350, 40);
 
         tela.add(resultado);
-        resultado.setBounds(50, 200, 300, 150);
+        resultado.setBounds(50, 120, 200, 150);
         resultado.setBorder(new LineBorder(Color.GRAY));
         resultado.setLineWrap(true); 
         resultado.setWrapStyleWord(true);
         resultado.setEditable(false);
         barraRolagem = new JScrollPane(resultado);
-        barraRolagem.setBounds(50, 200, 300, 150);
+        barraRolagem.setBounds(50, 120, 300, 100);
         tela.add(barraRolagem);
         
+        tela.add(nome_texto);
+        nome_texto.setBounds(50, 220, 350, 40);
+
+        tela.add(txt);
+        txt.setBounds(50, 260, 200, 150);
+        txt.setBorder(new LineBorder(Color.GRAY));
+        txt.setLineWrap(true); 
+        txt.setWrapStyleWord(true);
+        txt.setEditable(false);
+        barraRolagem = new JScrollPane(txt);
+        barraRolagem.setBounds(50, 260, 300, 150);
+        tela.add(barraRolagem);
+        
+        
+        
+        tela.add(voltar);
+        voltar.setBounds(150, 420, 100, 30);
+        voltar.addActionListener(
+            
+            new ActionListener(){    
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    //this.actionPerformed(e);
+                   dispose();
+                }
+             }
+            );
+                
         //tela.add(verificar);
        //verificar.setBounds(300, 100, 90, 30);
         //verificar.addActionListener(
@@ -102,57 +135,67 @@ public class Resultado extends JFrame {
                 
                // @Override
                // public void actionPerformed(ActionEvent e) {
-                    Thread tsensor3 = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
+               
+               
+               
+                   Thread tsensor3 = new Thread(new Runnable() {
+                   @Override
+                   public void run() {
                     
                         
                            Modelo modelo1 = new Modelo();
                            
                            try {
-                               
+                               GeradorGrafico geradorGrafico = new GeradorGrafico();
                                ServerSocket servidor3 = new ServerSocket(9002);
                                System.out.println("Esperando servidor retornar a resposta: ");
                                 while (true) {
+                                    System.out.println("abcd \n");
+                                    
                                     Socket cliente1 = servidor3.accept();
                                     
+                                    System.out.println("abvscafa \n");
                                     String a = "Cliente " + cliente1.getInetAddress().getHostAddress() + " conectado...";
                                     palavra.setText(a); 
                                     System.out.println("Cliente " + cliente1.getInetAddress().getHostAddress() + " conectado...");
                                     
                                     Scanner entrada = new Scanner(cliente1.getInputStream());
-                                    
+                                    String ler = entrada.nextLine();
                                     System.out.println("recebendo dados do cliente");
                                     
 
-                                   
+                                   Gson gson = new Gson();
 
                                     Modelo modelo2 = new Modelo();
                                 //RECEBENDO A STRING JSON
-                                    modelo2 = gson.fromJson(entrada.toString(), Modelo.class);
+                                    modelo2 = gson.fromJson(ler, Modelo.class);
                                     
                                     
                                        codigo = modelo2.getCodigo();
-                                       palavras = modelo2.getPalavras();
+                                       palavras = modelo2.getpalavras();
                                        vezesPalavraJSON = modelo2.getvezesPalavra();
                                        
-                                    tabela = new JTable(objeto, colunas);
-                                    barraRolagem = new JScrollPane(tabela);
-                                    barraRolagem.setBounds(20, 50, 540, 150);
+                                    //tabela = new JTable(objeto, colunas);
+                                    //barraRolagem = new JScrollPane(tabela);
+                                    //barraRolagem.setBounds(20, 50, 540, 150);
       
-                                    tela.add(barraRolagem);
-
-                                        for(int i = 0 ; i < modelo2.getPalavras().size(); i++){
-                                            System.out.println("Palavra: " + modelo2.getPalavras().get(i));
+                                    //tela.add(barraRolagem);
+                                      //  texto = modelo2.getTexto_enviar();
+                                        txt.setText(new Cliente_machine().getTxt());
+                                        for(int i = 0 ; i < modelo2.getpalavras().size(); i++){
+                                            System.out.println("Palavra: " + modelo2.getpalavras().get(i));
                                             System.out.println("Número de vezes que aparece: " + modelo2.getvezesPalavra().get(i));
-                                            resultado.insert(modelo2.getPalavras().get(i), resultado.getCaretPosition());
-                                            resultado.insert( modelo2.getvezesPalavra().get(i), resultado.getCaretPosition());
-                                            resultado.append("\n");
+                                            String imprime = "Palavras -  " + modelo2.getpalavras().get(i) + "  aparece  " + modelo2.getvezesPalavra().get(i) + " vezes";
+                                            resultado.insert(imprime +"\n", resultado.getCaretPosition());
                                             
+                                            resultado.append("\n");
+                                            geradorGrafico.addValor(Double.parseDouble(modelo2.getvezesPalavra().get(i)), modelo2.getpalavras().get(i), modelo2.getpalavras().get(i));
                                              //modelo.addRow(new Object[]{modelo2.getPalavras().get(i), modelo2.getvezesPalavra().get(i)});
                                         }
-                                   
+                                        geradorGrafico.exibeGrafico();
+                                  
                                 }
+                                
 
                            } catch (IOException ex) {
                                Logger.getLogger(Cliente_machine.class.getName()).log(Level.SEVERE, null, ex);
@@ -168,12 +211,14 @@ public class Resultado extends JFrame {
         
         add(tela);
         setVisible(true);
-        setSize(440, 440);
+        setSize(440, 500);
         setLocation(440, 100);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        
 
     }
-
+    
+    
         
 }
 
