@@ -70,9 +70,8 @@ public class Cliente_machine extends JFrame {
 
     private Socket cliente1;
 
-    
     String caminho = "C:\\Users\\pasid\\Documents\\zipado.zip";
-    
+
     public Cliente_machine() {
 
         JPanel tela = new JPanel();
@@ -141,7 +140,7 @@ public class Cliente_machine extends JFrame {
                         palavra.setText(arquivo.getSelectedFile().getAbsolutePath());
                     }
                     //palavra.setText("");
-                    
+
                     StringBuilder gambs = new StringBuilder();
                     File[] files = arquivo.getSelectedFiles();
                     ArrayList<String> arq = new ArrayList<>();
@@ -150,9 +149,8 @@ public class Cliente_machine extends JFrame {
                         arq.add(files[i].toString());
                     }
 
-                    
                     //Compactador.compactarParaZip("C:\\Users\\pasid\\Documents\\zipado.zip", arquivo.getSelectedFile().getAbsolutePath());
-                    Compactador.compactarParaZip(caminho,  arq);
+                    Compactador.compactarParaZip(caminho, arq);
                     // );
 
                 } catch (IOException ex) {
