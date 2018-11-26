@@ -5,8 +5,11 @@
  */
 package cliente_machine;
 
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
@@ -16,33 +19,39 @@ import java.net.Socket;
  */
 public class cliente_envioArquivo {
 
-    
     String caminho = "C:\\Users\\pasid\\Documents\\zipado.zip";
-    
-    
-    
+
     public static void main(String[] args) throws IOException {
-        Socket cliente = new Socket("127.0.0.1", 1234);
 
-        /*DataInputStream in = new DataInputStream(cliente.getInputStream());
-        DataOutputStream out = new DataOutputStream(cliente.getOutputStream());
-         
-        int intt = in.readInt();
-         
-        System.out.println(intt);*/
-        ObjectOutputStream out = new ObjectOutputStream(cliente.getOutputStream());
-
-        FileInputStream file = new FileInputStream("C:\\Users\\pasid\\Documents\\zipado.zip");
-
-        byte[] buf = new byte[4096];
-
-        while (true) {
-            int len = file.read(buf);
-            if (len == -1) {
-                break;
+        int filesize = 6022386;
+        long start = System.currentTimeMillis();
+        int bytesRead;
+        int current = 0;
+        Socket sock = new Socket("127.0.0.1", 13267);
+        // recebendo o arquivo
+        byte[] mybytearray = new byte[filesize];
+        InputStream is = sock.getInputStream();
+        FileOutputStream fos = new FileOutputStream("C:\\Users\\pasid\\Documents\\zipado.zip");
+        BufferedOutputStream bos = new BufferedOutputStream(fos);
+        bytesRead = is.read(mybytearray, 0, mybytearray.length);
+        current = bytesRead;
+        do {
+            bytesRead = is.read(mybytearray, current, (mybytearray.length - current));
+            if (bytesRead >= 0) {
+                current += bytesRead;
             }
-            out.write(buf, 0, len);
-        }
+        } while (bytesRead > -1);
+        bos.write(mybytearray, 0, current);
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
+        bos.close();
+        sock.close();
+
+        
+        
+        
+        
+        
         System.out.println("Arquivo Enviado!");
     }
 

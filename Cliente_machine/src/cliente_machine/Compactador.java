@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class Compactador {
@@ -76,5 +77,48 @@ public class Compactador {
         }
 
         saida.close();
+    }
+
+    public static void descompactador(String caminho) {
+        byte[] buffer = new byte[1024];
+
+        try {
+
+            // Cria o input do arquivo ZIP
+            ZipInputStream zinstream = new ZipInputStream(new FileInputStream(caminho));
+
+            // Pega a proxima entrada do arquivo
+            ZipEntry zentry = zinstream.getNextEntry();
+
+            // Enquanto existir entradas no ZIP
+            while (zentry != null) {
+                // Pega o nome da entrada
+                String entryName = zentry.getName();
+
+                // Cria o output do arquivo , Sera extraido onde esta rodando a classe
+                FileOutputStream outstream = new FileOutputStream(entryName);
+                int n;
+
+                // Escreve no arquivo
+                while ((n = zinstream.read(buffer)) > -1) {
+                    outstream.write(buffer, 0, n);
+
+                }
+
+                // Fecha arquivo
+                outstream.close();
+
+                // Fecha entrada e tenta pegar a proxima
+                zinstream.closeEntry();
+                zentry = zinstream.getNextEntry();
+            }
+
+            // Fecha o zip como um todo
+            zinstream.close();
+
+            System.out.println("Done");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

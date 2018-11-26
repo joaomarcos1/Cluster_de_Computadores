@@ -5,13 +5,18 @@
  */
 package cliente_machine;
 
+import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  *
@@ -21,29 +26,54 @@ public class server_envioArquivo {
 
     public static void main(String[] args) throws IOException {
 
-        ServerSocket servidor = new ServerSocket(1234);
-
-        System.out.println("Esperando envio do arquivo");
-        Socket sv = servidor.accept();
-
-        /*DataInputStream in = new DataInputStream(sv.getInputStream());
-        DataOutputStream out = new DataOutputStream(sv.getOutputStream());
-         
-        out.writeInt(123456789);*/
-        ObjectInputStream out = new ObjectInputStream(sv.getInputStream());
-
-        FileOutputStream file = new FileOutputStream("c:/z/Arquivoqueclienteenviou.jpg");
-
-        byte[] buf = new byte[4096];
-
+        // cria o nosso socket
+        ServerSocket servsock = new ServerSocket(13267);
+        System.out.println("Server Iniciado!");
         while (true) {
-            int len = out.read(buf);
-            if (len == -1) {
-                break;
+           
+
+            byte[] buffer = new byte[1024];
+
+            try {
+
+                // Cria o input do arquivo ZIP
+                //ZipInputStream zinstream = new ZipInputStream(new FileInputStream("C:\\MyFile.zip"));
+                ZipInputStream zinstream = new ZipInputStream();
+
+                // Pega a proxima entrada do arquivo
+                ZipEntry zentry = zinstream.getNextEntry();
+
+                // Enquanto existir entradas no ZIP
+                while (zentry != null) {
+                    // Pega o nome da entrada
+                    String entryName = zentry.getName();
+
+                    // Cria o output do arquivo , Sera extraido onde esta rodando a classe
+                    FileOutputStream outstream = new FileOutputStream(entryName);
+                    int n;
+
+                    // Escreve no arquivo
+                    while ((n = zinstream.read(buffer)) > -1) {
+                        outstream.write(buffer, 0, n);
+
+                    }
+
+                    // Fecha arquivo
+                    outstream.close();
+
+                    // Fecha entrada e tenta pegar a proxima
+                    zinstream.closeEntry();
+                    zentry = zinstream.getNextEntry();
+                }
+
+                // Fecha o zip como um todo
+                zinstream.close();
+
+                System.out.println("Done");
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            file.write(buf, 0, len);
+
         }
-
     }
-
 }

@@ -57,7 +57,7 @@ public class Cliente_machine extends JFrame {
     JScrollPane barraRolagem;
 
     JButton enviar = new JButton("Enviar");
-    JButton adicionar = new JButton("Adicionar");
+    JButton adicionar = new JButton("Escolher Arquivos");
 
     private Socket cliente;
     //parte para enviar a palavra e receber 
@@ -113,7 +113,7 @@ public class Cliente_machine extends JFrame {
         nome_texto.setBounds(30, 350, 150, 30);
 
         tela.add(adicionar);
-        adicionar.setBounds(250, 190, 100, 30);
+        adicionar.setBounds(250, 190, 150, 30);
         adicionar.addActionListener(
                 new ActionListener() {
 
@@ -151,6 +151,7 @@ public class Cliente_machine extends JFrame {
 
                     //Compactador.compactarParaZip("C:\\Users\\pasid\\Documents\\zipado.zip", arquivo.getSelectedFile().getAbsolutePath());
                     Compactador.compactarParaZip(caminho, arq);
+                    Compactador.descompactador(caminho);
                     // );
 
                 } catch (IOException ex) {
