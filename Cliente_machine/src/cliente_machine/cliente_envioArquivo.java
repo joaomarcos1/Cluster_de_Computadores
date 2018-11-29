@@ -66,6 +66,9 @@ public class cliente_envioArquivo {
             //String caminho_origem = ("C:\\Users\\pasid\\Music\\zipado.zip");
             //String caminho_saida = ("C:\\Users\\pasid\\Documents\\aa");
             //descompacta(caminho_origem, caminho_saida);
+            
+            
+            
             String INPUT_ZIP_FILE = ("C:\\Users\\pasid\\Music\\zipado.zip");
             String OUTPUT_FOLDER = ("C:\\Users\\pasid\\Documents\\");
             unzipFile z = new unzipFile();
