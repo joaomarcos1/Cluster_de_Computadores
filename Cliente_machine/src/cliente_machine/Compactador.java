@@ -85,7 +85,7 @@ public class Compactador {
         try {
 
             // Cria o input do arquivo ZIP
-            ZipInputStream zinstream = new ZipInputStream(new FileInputStream(caminho));
+            ZipInputStream zinstream = new ZipInputStream(new FileInputStream("C:\\Users\\pasid\\Documents\\zipado.zip"));
 
             // Pega a proxima entrada do arquivo
             ZipEntry zentry = zinstream.getNextEntry();
@@ -116,7 +116,7 @@ public class Compactador {
             // Fecha o zip como um todo
             zinstream.close();
 
-            System.out.println("Done");
+            System.out.println("Descompactado!");
         } catch (IOException ex) {
             ex.printStackTrace();
         }

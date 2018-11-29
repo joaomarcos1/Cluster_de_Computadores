@@ -18,62 +18,81 @@ import java.net.Socket;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-/**
- *
- * @author pasid
- */
 public class server_envioArquivo {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
-        // cria o nosso socket
-        ServerSocket servsock = new ServerSocket(13267);
-        System.out.println("Server Iniciado!");
-        while (true) {
-           
+        // Criando servidor
+        server_envioArquivo server = new server_envioArquivo();
 
-            byte[] buffer = new byte[1024];
+        // Aguardar conexao de cliente para transferia
+        server.waitForClient();
 
-            try {
+    }
 
-                // Cria o input do arquivo ZIP
-                //ZipInputStream zinstream = new ZipInputStream(new FileInputStream("C:\\MyFile.zip"));
-                ZipInputStream zinstream = new ZipInputStream();
+    public void waitForClient() {
+        // Checa se a transferencia foi completada com sucesso
+        OutputStream socketOut = null;
+        ServerSocket servsock = null;
+        FileInputStream fileIn = null;
 
-                // Pega a proxima entrada do arquivo
-                ZipEntry zentry = zinstream.getNextEntry();
+        try {
+            // Abrindo porta para conexao de clients
+            servsock = new ServerSocket(13267);
+            System.out.println("Porta de conexao aberta 13267");
 
-                // Enquanto existir entradas no ZIP
-                while (zentry != null) {
-                    // Pega o nome da entrada
-                    String entryName = zentry.getName();
+            // Cliente conectado
+            Socket sock = servsock.accept();
+            System.out.println("Conexao recebida pelo cliente");
 
-                    // Cria o output do arquivo , Sera extraido onde esta rodando a classe
-                    FileOutputStream outstream = new FileOutputStream(entryName);
-                    int n;
+            // Criando tamanho de leitura
+            byte[] cbuffer = new byte[1024];
+            int bytesRead;
 
-                    // Escreve no arquivo
-                    while ((n = zinstream.read(buffer)) > -1) {
-                        outstream.write(buffer, 0, n);
+            // Criando arquivo que sera transferido pelo servidor
+            //C:\Users\pasid\Music
+            File file = new File("C:\\Users\\pasid\\Music\\zipado.zip");
+            fileIn = new FileInputStream(file);
+            System.out.println("Lendo arquivo...");
 
-                    }
+            // Criando canal de transferencia
+            socketOut = sock.getOutputStream();
 
-                    // Fecha arquivo
-                    outstream.close();
-
-                    // Fecha entrada e tenta pegar a proxima
-                    zinstream.closeEntry();
-                    zentry = zinstream.getNextEntry();
-                }
-
-                // Fecha o zip como um todo
-                zinstream.close();
-
-                System.out.println("Done");
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            // Lendo arquivo criado e enviado para o canal de transferencia
+            System.out.println("Enviando Arquivo...");
+            while ((bytesRead = fileIn.read(cbuffer)) != -1) {
+                socketOut.write(cbuffer, 0, bytesRead);
+                socketOut.flush();
             }
 
+            System.out.println("Arquivo Enviado!");
+        } catch (Exception e) {
+            // Mostra erro no console
+            e.printStackTrace();
+        } finally {
+            if (socketOut != null) {
+                try {
+                    socketOut.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (servsock != null) {
+                try {
+                    servsock.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (fileIn != null) {
+                try {
+                    fileIn.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

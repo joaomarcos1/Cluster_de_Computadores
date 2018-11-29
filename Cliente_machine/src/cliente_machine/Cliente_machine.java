@@ -72,6 +72,8 @@ public class Cliente_machine extends JFrame {
 
     String caminho = "C:\\Users\\pasid\\Documents\\zipado.zip";
 
+    JLabel confirmacao = new JLabel();
+
     public Cliente_machine() {
 
         JPanel tela = new JPanel();
@@ -90,6 +92,7 @@ public class Cliente_machine extends JFrame {
         tela.add(nome_palavra);
         nome_palavra.setBounds(35, 160, 250, 30);
 
+        /*
         tela.add(palavras_adicionadas);
         palavras_adicionadas.setBounds(40, 235, 300, 100);
         palavras_adicionadas.setBorder(new LineBorder(Color.GRAY));
@@ -99,7 +102,8 @@ public class Cliente_machine extends JFrame {
         barraRolagem = new JScrollPane(palavras_adicionadas);
         barraRolagem.setBounds(40, 235, 300, 100);
         tela.add(barraRolagem);
-
+         */
+ /*
         tela.add(texto);
         texto.setBounds(40, 380, 350, 200);
         texto.setBorder(new LineBorder(Color.GRAY));
@@ -109,11 +113,13 @@ public class Cliente_machine extends JFrame {
         barraRolagem.setBounds(40, 380, 340, 180);
         tela.add(barraRolagem);
 
+        
+        
         tela.add(nome_texto);
         nome_texto.setBounds(30, 350, 150, 30);
-
+         */
         tela.add(adicionar);
-        adicionar.setBounds(250, 190, 150, 30);
+        adicionar.setBounds(40, 230, 150, 30);
         adicionar.addActionListener(
                 new ActionListener() {
 
@@ -153,7 +159,7 @@ public class Cliente_machine extends JFrame {
                     Compactador.compactarParaZip(caminho, arq);
                     Compactador.descompactador(caminho);
                     // );
-
+                    confirmacao.setText("Arquivos Compactados");
                 } catch (IOException ex) {
                     Logger.getLogger(Cliente_machine.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -161,54 +167,46 @@ public class Cliente_machine extends JFrame {
 
         });
 
-        tela.add(enviar);
+        tela.add(confirmacao);
+        confirmacao.setBounds(40, 280, 200, 30);
 
-        enviar.setBounds(
-                130, 600, 150, 40);
+        tela.add(enviar);
+        enviar.setBounds(40, 350, 350, 40);
         enviar.addActionListener(
                 new ActionListener() {
 
             @Override
-            public void actionPerformed(ActionEvent e
-            ) {
-                if (!"".equals(texto.getText()) && !"".equals(palavras_adicionadas.getText())) {
-                    //Resultado result = new Resultado();
+            public void actionPerformed(ActionEvent e) {
+                //if (!"".equals(texto.getText()) && !"".equals(palavras_adicionadas.getText())) {
+                //Resultado result = new Resultado();
 
-                    Modelo modelo1 = new Modelo();
-                    texto_enviar = texto.getText();
-                    modelo1.setTexto_enviar(texto_enviar);
-                    System.out.println("aaa");
+                Modelo modelo1 = new Modelo();
+                texto_enviar = texto.getText();
+                modelo1.setTexto_enviar(texto_enviar);
+                System.out.println("aaa");
 
-                    enviar_arquivo_gson();
+                enviar_arquivo_gson();
 
-                    Resultado rst = new Resultado();
-                    texto.setText("");
-                    palavras_adicionadas.setText("");
-                    //palavras.add(texto.getText());
-                    //Texto_enviar.add(texto.getText());
+                Resultado rst = new Resultado();
+                texto.setText("");
+                palavras_adicionadas.setText("");
+                //palavras.add(texto.getText());
+                //Texto_enviar.add(texto.getText());
 
-                } else {//CASO ALGUM CAMPO ESTEJA VAZIO
-                    JOptionPane.showMessageDialog(null, "Preencha todos os campos !!", "ERRO!", JOptionPane.WARNING_MESSAGE);
-                }
-
+                //} else {//CASO ALGUM CAMPO ESTEJA VAZIO
+                //    JOptionPane.showMessageDialog(null, "Preencha todos os campos !!", "ERRO!", JOptionPane.WARNING_MESSAGE);
+                //}
             }
         }
         );
 
         add(tela);
-
-        setVisible(
-                true);
-        setSize(
-                440, 700);
-        setLocation(
-                440, 100);
+        setVisible(true);
+        setSize(440, 500);
+        setLocation(440, 100);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
-    /**
-     *
-     */
     public void enviar_arquivo_gson() {
 
         Thread tsensor3 = new Thread(new Runnable() {
