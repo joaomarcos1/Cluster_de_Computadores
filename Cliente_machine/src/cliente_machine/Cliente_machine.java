@@ -10,7 +10,9 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -187,12 +189,78 @@ public class Cliente_machine extends JFrame {
 
                 enviar_arquivo_gson();
 
-                Resultado rst = new Resultado();
+                //Resultado rst = new Resultado();
                 texto.setText("");
                 palavras_adicionadas.setText("");
+
+                
+                //ABAIXO, ENVIAR ARQUIVO PARA MASTER
+                
+                OutputStream socketOut = null;
+                ServerSocket servsock = null;
+                FileInputStream fileIn = null;
+
+                try {
+                    // Abrindo porta para conexao de clients
+                    servsock = new ServerSocket(13267);
+                    System.out.println("Porta de conexao aberta 13267");
+
+                    // Cliente conectado
+                    Socket sock = servsock.accept();
+                    System.out.println("Conexao recebida pelo cliente");
+
+                    // Criando tamanho de leitura
+                    byte[] cbuffer = new byte[1024];
+                    int bytesRead;
+
+                    // Criando arquivo que sera transferido pelo servidor
+                    //C:\Users\pasid\Music
+                    File file = new File("C:\\Users\\pasid\\Music\\zipado.zip");
+                    fileIn = new FileInputStream(file);
+                    System.out.println("Lendo arquivo...");
+
+                    // Criando canal de transferencia
+                    socketOut = sock.getOutputStream();
+
+                    // Lendo arquivo criado e enviado para o canal de transferencia
+                    System.out.println("Enviando Arquivo...");
+                    while ((bytesRead = fileIn.read(cbuffer)) != -1) {
+                        socketOut.write(cbuffer, 0, bytesRead);
+                        socketOut.flush();
+                    }
+
+                    System.out.println("Arquivo Enviado!");
+                } catch (Exception a1) {
+                    // Mostra erro no console
+                    a1.printStackTrace();
+                } finally {
+                    if (socketOut != null) {
+                        try {
+                            socketOut.close();
+                        } catch (IOException a) {
+                            a.printStackTrace();
+                        }
+                    }
+
+                    if (servsock != null) {
+                        try {
+                            servsock.close();
+                        } catch (IOException b) {
+                            b.printStackTrace();
+                        }
+                    }
+
+                    if (fileIn != null) {
+                        try {
+                            fileIn.close();
+                        } catch (IOException c) {
+                            c.printStackTrace();
+                        }
+                    }
+                }
+
                 //palavras.add(texto.getText());
                 //Texto_enviar.add(texto.getText());
-
                 //} else {//CASO ALGUM CAMPO ESTEJA VAZIO
                 //    JOptionPane.showMessageDialog(null, "Preencha todos os campos !!", "ERRO!", JOptionPane.WARNING_MESSAGE);
                 //}
