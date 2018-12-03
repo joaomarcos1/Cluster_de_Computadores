@@ -50,11 +50,16 @@ public class gerarGargaArquivo {
         int randPreposition = (int) (Math.random() * prepositionLength);
         int randArticle2 = (int) (Math.random() * articleLength);
         int randNoun2 = (int) (Math.random() * nounLength);
+        
+        int randArticle10 = (int) (Math.random() * articleLength);
+        int randNoun10 = (int) (Math.random() * nounLength);
+        int randVerb10 = (int) (Math.random() * verbLength);
+        int randPreposition10 = (int) (Math.random() * prepositionLength);
 
         for (i = 0; i < (quantidade / 10); i++) {
             //tamanhos totais palavras de cada tipo 
 
-            frase = article[randArticle] + " " + noun[randNoun] + " " + verb[randVerb] + " " + preposition[randPreposition] + " " + article[randArticle] + " " + noun[randNoun2] + " " + article[randArticle] + " " + noun[randNoun] + " " + verb[randVerb] + " " + preposition[randPreposition] + ".";
+            frase = article[randArticle] + " " + noun[randNoun] + " " + verb[randVerb] + " " + preposition[randPreposition] + " " + article[randArticle] + " " + noun[randNoun2] + " " + article[randArticle10] + " " + noun[randNoun10] + " " + verb[randVerb10] + " " + preposition[randPreposition10] + " ";
       
             texto.add(frase);
 

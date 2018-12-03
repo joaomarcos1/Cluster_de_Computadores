@@ -51,6 +51,7 @@ public class Cluster_Local extends JFrame {
 
     JLabel valor1 = new JLabel("Arquivo Utilizado");
     JLabel valor2 = new JLabel("valor 2");
+    JLabel avisos = new JLabel("Status do Processamento: Inativo");
 
     JButton iniciar = new JButton("Iniciar");
     JLabel mostrarsoma = new JLabel("Resultado do Processamento:");
@@ -63,12 +64,16 @@ public class Cluster_Local extends JFrame {
 
     Gson gson = new Gson();
 
-    ArrayList<String> palavras = new ArrayList<>();
-    ArrayList<String> palavrasJSON = new ArrayList<>();
-    ArrayList<String> vezesPalavraJSON = new ArrayList<>();
+    //ArrayList<String> palavrasJSON = new ArrayList<>();
+    //ArrayList<String> vezesPalavraJSON = new ArrayList<>();
     String texto = null;
     int codigo;
 
+    //VARIÁVEIS PARA CONTAGEM DE PALAVRAS
+    ArrayList<String> palavras = new ArrayList<>();
+    ArrayList<String> vezesPalavra = new ArrayList<>();
+    
+    
     public Cluster_Local() {
         JPanel tela = new JPanel();
         tela.setLayout(null);
@@ -86,6 +91,9 @@ public class Cluster_Local extends JFrame {
         tela.add(tfvalor1);
         tfvalor1.setBounds(160, 64, 200, 40);
 
+        tela.add(avisos);
+        avisos.setBounds(20, 110, 200, 20);
+
         tela.add(mostrarsoma);
         mostrarsoma.setBounds(20, 180, 350, 40);
 
@@ -102,8 +110,8 @@ public class Cluster_Local extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 palavras.clear();
-                palavrasJSON.clear();
-                vezesPalavraJSON.clear();
+                //palavrasJSON.clear();
+                //vezesPalavraJSON.clear();
 
                 Modelo modelo2 = new Modelo();
 
@@ -118,25 +126,38 @@ public class Cluster_Local extends JFrame {
                 //palavra.setText("");
                 StringBuilder gambs = new StringBuilder();
                 File[] files = arquivo.getSelectedFiles();
-                
+
                 //ArrayList<String> arq = new ArrayList<>();
                 //for (int i = 0; i < files.length; i++) {
                 //    System.out.println(files[i]);
                 //}
-
+                avisos.setText("Status do Processamento: Processando Arquivo");
                 try {
+                    
+                    int cont = 0;
                     System.out.println("Lendo Arquivo!");
                     BufferedReader br = new BufferedReader(new FileReader(files[0]));
                     while (br.ready()) {
                         String linha = br.readLine();
-                        System.out.println(linha+"\n");
+                        texto = linha;
+
+                        System.out.println(linha + "\n");
+                        System.out.println("próxima linha");
+                        cont++;
                     }
                     br.close();
+                    //System.out.println(arra.get(0));
+
+                    String[] texto1 = texto.split(" ");
+
+                    for (int i = 0; i < 10; i++) {
+                        System.out.println("Palavra: " + texto1[i]);
+                        palavras.add(texto1[i]);
+                    }
+
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
                 }
-                
-                
 
                 //CHAMANDO FUNÇÃO CONTAGEM PALAVRAS ABAIXO
                 StringBuilder enviar = new StringBuilder();
@@ -144,16 +165,33 @@ public class Cluster_Local extends JFrame {
 
                 //ALTERAR PARA AS PALAVRAS QUE CADA PALVRA DO ARTIGO APARECEU
                 for (int i = 0; i < palavras.size(); i++) {
-                    vezesPalavraJSON.add((Integer.toString(contaPalavras(palavras.get(i), texto))));
+                    vezesPalavra.add((Integer.toString(contaPalavras(palavras.get(i), texto))));
                 }
 
                 double fim = System.currentTimeMillis();
 
                 double tempoProcessamento = fim - inicial;
 
-                System.out.println("Tempo de Realização da Tarefa: " + tempoProcessamento + "segundos");
+                avisos.setText("Status do Processamento: Finalizado");
+
+                System.out.println("Tempo de Realização da Tarefa: " + tempoProcessamento + "milissegundos");
                 resultados.setText(Double.toString(tempoProcessamento));
 
+                
+                StringBuilder resultados = new StringBuilder();
+                for (int i = 0; i < palavras.size(); i++){
+                    resultados.append("Palavra: "+palavras.get(i)+"Vezes: "+vezesPalavra.get(i));
+                    
+                    
+                }
+                
+                
+                tfsoma.setText(resultados.toString());
+                
+                
+                
+                
+                
             }
 
         });
