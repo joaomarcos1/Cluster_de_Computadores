@@ -39,6 +39,10 @@ class Modelo {
         return vezesPalavra;
     }
 
+    
+    
+    
+    
     public void setVezesPalavra(ArrayList<String> vezesPalavra) {
         this.vezesPalavra = vezesPalavra;
     }
