@@ -35,10 +35,6 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-/**
- *
- * @author Tacio Moreira
- */
 public class Cliente_machine extends JFrame {
 
     //criando o arquivo gson
@@ -72,7 +68,8 @@ public class Cliente_machine extends JFrame {
 
     private Socket cliente1;
 
-    String caminho = "C:\\Users\\pasid\\Documents\\zipado.zip";
+    //String caminho = "C:\\Users\\pasid\\Documents\\zipado.zip";
+    String caminho = "zipado.zip";
 
     JLabel confirmacao = new JLabel();
 
@@ -149,7 +146,7 @@ public class Cliente_machine extends JFrame {
                     }
                     //palavra.setText("");
 
-                    StringBuilder gambs = new StringBuilder();
+                    //StringBuilder gambs = new StringBuilder();
                     File[] files = arquivo.getSelectedFiles();
                     ArrayList<String> arq = new ArrayList<>();
                     for (int i = 0; i < files.length; i++) {
@@ -159,7 +156,7 @@ public class Cliente_machine extends JFrame {
 
                     //Compactador.compactarParaZip("C:\\Users\\pasid\\Documents\\zipado.zip", arquivo.getSelectedFile().getAbsolutePath());
                     Compactador.compactarParaZip(caminho, arq);
-                    Compactador.descompactador(caminho);
+                    //Compactador.descompactador(caminho);
                     // );
                     confirmacao.setText("Arquivos Compactados");
                 } catch (IOException ex) {
@@ -185,85 +182,18 @@ public class Cliente_machine extends JFrame {
                 Modelo modelo1 = new Modelo();
                 texto_enviar = texto.getText();
                 modelo1.setTexto_enviar(texto_enviar);
-                System.out.println("aaa");
+                //System.out.println("aaa");
 
                 enviar_arquivo_gson();
 
                 //Resultado rst = new Resultado();
                 texto.setText("");
                 palavras_adicionadas.setText("");
-
                 
+                
+                waitForClient();
+
                 //ABAIXO, ENVIAR ARQUIVO PARA MASTER
-                
-                OutputStream socketOut = null;
-                ServerSocket servsock = null;
-                FileInputStream fileIn = null;
-
-                try {
-                    // Abrindo porta para conexao de clients
-                    servsock = new ServerSocket(13267);
-                    System.out.println("Porta de conexao aberta 13267");
-
-                    // Cliente conectado
-                    Socket sock = servsock.accept();
-                    System.out.println("Conexao recebida pelo cliente");
-
-                    // Criando tamanho de leitura
-                    byte[] cbuffer = new byte[1024];
-                    int bytesRead;
-
-                    // Criando arquivo que sera transferido pelo servidor
-                    //C:\Users\pasid\Music
-                    File file = new File("C:\\Users\\pasid\\Music\\zipado.zip");
-                    fileIn = new FileInputStream(file);
-                    System.out.println("Lendo arquivo...");
-
-                    // Criando canal de transferencia
-                    socketOut = sock.getOutputStream();
-
-                    // Lendo arquivo criado e enviado para o canal de transferencia
-                    System.out.println("Enviando Arquivo...");
-                    while ((bytesRead = fileIn.read(cbuffer)) != -1) {
-                        socketOut.write(cbuffer, 0, bytesRead);
-                        socketOut.flush();
-                    }
-
-                    System.out.println("Arquivo Enviado!");
-                } catch (Exception a1) {
-                    // Mostra erro no console
-                    a1.printStackTrace();
-                } finally {
-                    if (socketOut != null) {
-                        try {
-                            socketOut.close();
-                        } catch (IOException a) {
-                            a.printStackTrace();
-                        }
-                    }
-
-                    if (servsock != null) {
-                        try {
-                            servsock.close();
-                        } catch (IOException b) {
-                            b.printStackTrace();
-                        }
-                    }
-
-                    if (fileIn != null) {
-                        try {
-                            fileIn.close();
-                        } catch (IOException c) {
-                            c.printStackTrace();
-                        }
-                    }
-                }
-
-                //palavras.add(texto.getText());
-                //Texto_enviar.add(texto.getText());
-                //} else {//CASO ALGUM CAMPO ESTEJA VAZIO
-                //    JOptionPane.showMessageDialog(null, "Preencha todos os campos !!", "ERRO!", JOptionPane.WARNING_MESSAGE);
-                //}
             }
         }
         );
@@ -287,12 +217,12 @@ public class Cliente_machine extends JFrame {
                 String json = "";
                 //transformando o modelo em Json
                 json = gson.toJson(modelo1);
-                System.out.println("Modelo transformado em Json: " + json);
-
+                //System.out.println("Modelo transformado em Json: " + json);
+                System.out.println("Arquivo pronto para ser enviado!");
                 try {
 
-                    Socket cliente = new Socket("192.168.0.116", 9000);
-                    System.out.println("Enviando ");
+                    Socket cliente = new Socket("127.0.0.1", 9000);
+                    System.out.println("Enviando...");
                     PrintStream saida = new PrintStream(cliente.getOutputStream());
 
                     saida.print(json);
@@ -308,6 +238,73 @@ public class Cliente_machine extends JFrame {
         });
         tsensor3.start();
 
+    }
+
+    public void waitForClient() {
+        // Checa se a transferencia foi completada com sucesso
+        OutputStream socketOut = null;
+        ServerSocket servsock = null;
+        FileInputStream fileIn = null;
+
+        try {
+            // Abrindo porta para conexao de clients
+            servsock = new ServerSocket(13267);
+            System.out.println("Porta de conexao aberta 13267");
+
+            // Cliente conectado
+            Socket sock = servsock.accept();
+            System.out.println("Conexao recebida pelo cliente");
+
+            // Criando tamanho de leitura
+            byte[] cbuffer = new byte[1024];
+            int bytesRead;
+
+            // Criando arquivo que sera transferido pelo servidor
+            //C:\Users\pasid\Music
+            //File file = new File("C:\\Users\\pasid\\Music\\zipado.zip");
+            File file = new File("zipado.zip");
+            fileIn = new FileInputStream(file);
+            System.out.println("Lendo arquivo...");
+
+            // Criando canal de transferencia
+            socketOut = sock.getOutputStream();
+
+            // Lendo arquivo criado e enviado para o canal de transferencia
+            System.out.println("Enviando Arquivo...");
+            while ((bytesRead = fileIn.read(cbuffer)) != -1) {
+                socketOut.write(cbuffer, 0, bytesRead);
+                socketOut.flush();
+            }
+
+            System.out.println("Arquivo Enviado!");
+        } catch (Exception e) {
+            // Mostra erro no console
+            e.printStackTrace();
+        } finally {
+            if (socketOut != null) {
+                try {
+                    socketOut.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (servsock != null) {
+                try {
+                    servsock.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (fileIn != null) {
+                try {
+                    fileIn.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {

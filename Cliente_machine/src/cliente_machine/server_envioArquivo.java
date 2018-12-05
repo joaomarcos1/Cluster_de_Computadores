@@ -51,7 +51,7 @@ public class server_envioArquivo {
 
             // Criando arquivo que sera transferido pelo servidor
             //C:\Users\pasid\Music
-            File file = new File("C:\\Users\\pasid\\Music\\zipado.zip");
+            File file = new File("zipado.zip");
             fileIn = new FileInputStream(file);
             System.out.println("Lendo arquivo...");
 
