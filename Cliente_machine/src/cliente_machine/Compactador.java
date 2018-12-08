@@ -54,7 +54,7 @@ public class Compactador {
     }
      */
     //public static void compactarParaZip(final String arqSaida, final String... arqEntradas) throws IOException {
-    public static void compactarParaZip(final String arqSaida, final ArrayList<String>... arqEntradas) throws IOException {
+    public void compactarParaZip(final String arqSaida, final ArrayList<String>... arqEntradas) throws IOException {
         int cont;
         final byte[] dados = new byte[TAMANHO_BUFFER];
 

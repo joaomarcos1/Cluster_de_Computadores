@@ -9,14 +9,18 @@ import com.google.gson.Gson;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -75,6 +79,7 @@ public class Cliente_machine extends JFrame {
 
     public Cliente_machine() {
 
+        /*
         JPanel tela = new JPanel();
         tela.setLayout(null);
         tela.setBackground(Color.white);
@@ -90,8 +95,9 @@ public class Cliente_machine extends JFrame {
 
         tela.add(nome_palavra);
         nome_palavra.setBounds(35, 160, 250, 30);
+         */
 
-        /*
+ /*
         tela.add(palavras_adicionadas);
         palavras_adicionadas.setBounds(40, 235, 300, 100);
         palavras_adicionadas.setBorder(new LineBorder(Color.GRAY));
@@ -116,7 +122,6 @@ public class Cliente_machine extends JFrame {
         
         tela.add(nome_texto);
         nome_texto.setBounds(30, 350, 150, 30);
-         */
         tela.add(adicionar);
         adicionar.setBounds(40, 230, 150, 30);
         adicionar.addActionListener(
@@ -125,7 +130,7 @@ public class Cliente_machine extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //if (!"".equals(palavra.getText())) {
-                /*
+                
                        String a = palavra.getText();
                        palavras_adicionadas.insert(a, palavras_adicionadas.getCaretPosition());
                        palavras_adicionadas.append("\n");
@@ -134,7 +139,7 @@ public class Cliente_machine extends JFrame {
                        modelo1.setpalavras(palavras_enviada);
                        System.out.println(palavras_enviada);
 
-                 */
+                 
                 try {
                     JFileChooser arquivo = new JFileChooser();
                     arquivo.setMultiSelectionEnabled(true);
@@ -165,10 +170,12 @@ public class Cliente_machine extends JFrame {
             }
 
         });
+         */
 
-        tela.add(confirmacao);
-        confirmacao.setBounds(40, 280, 200, 30);
+        //tela.add(confirmacao);
+        //confirmacao.setBounds(40, 280, 200, 30);
 
+        /*
         tela.add(enviar);
         enviar.setBounds(40, 350, 350, 40);
         enviar.addActionListener(
@@ -179,30 +186,34 @@ public class Cliente_machine extends JFrame {
                 //if (!"".equals(texto.getText()) && !"".equals(palavras_adicionadas.getText())) {
                 //Resultado result = new Resultado();
 
-                Modelo modelo1 = new Modelo();
+                //Modelo modelo1 = new Modelo();
                 texto_enviar = texto.getText();
-                modelo1.setTexto_enviar(texto_enviar);
+                //modelo1.setTexto_enviar(texto_enviar);
                 //System.out.println("aaa");
+                try {
+                    //enviar_arquivo_gson();
 
-                enviar_arquivo_gson();
-
+                    envio_Arquivos();
+                } catch (IOException ex) {
+                    Logger.getLogger(Cliente_machine.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 //Resultado rst = new Resultado();
                 texto.setText("");
                 palavras_adicionadas.setText("");
-                
-                
-                waitForClient();
 
+                //waitForClient();
                 //ABAIXO, ENVIAR ARQUIVO PARA MASTER
             }
         }
         );
 
+        /*
         add(tela);
         setVisible(true);
         setSize(440, 500);
         setLocation(440, 100);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+         */
     }
 
     public void enviar_arquivo_gson() {
@@ -307,11 +318,49 @@ public class Cliente_machine extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
+    public void envio_Arquivos(String IP) throws FileNotFoundException, IOException {
+        File f = new File("zipado.zip");
+        System.out.println("Lendo Arquivo...");
+        FileInputStream in = new FileInputStream(f);
+        Socket socket = new Socket(IP, 9000);
+        OutputStream out = socket.getOutputStream();
+        OutputStreamWriter osw = new OutputStreamWriter(out);
+        BufferedWriter writer = new BufferedWriter(osw);
+        writer.write(f.getName() + "\n");
+        writer.flush();
+        int c;
+        int tamanho = 99999999; // buffer de 4KB  
+        byte[] buffer = new byte[tamanho];
+        int lidos = -1;
+        System.out.println("Enviando Arquivo...");
+        while ((lidos = in.read(buffer, 0, tamanho)) != -1) {
+            out.write(buffer, 0, lidos);
+        }
+        System.out.println("Arquivo Enviado!");
+    }
+
+    public static Properties getProp() throws IOException {
+        Properties props = new Properties();
+        FileInputStream file = new FileInputStream("./properties/dados.properties");
+        props.load(file);
+        return props;
+
+    }
+
+    public static void main(String[] args) throws IOException {
 
         //new Cliente_machine();
-        new Cliente_machine();
+        //new Cliente_machine();
         //Resultado rst = new Resultado();
+        //Properties prop = getProp();
+        ArrayList<String> array = new ArrayList<>();
+        //String arquivo = prop.getProperty("arquivo_compactacao");
+        array.add("ArquivoGerado.txt");
+        Compactador compac = new Compactador();
+        compac.compactarParaZip("zipado.zip", array);
+        Cliente_machine cliente = new Cliente_machine();
+
+        cliente.envio_Arquivos(args[0]);
     }
 
 }
