@@ -42,7 +42,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class Cliente_machine extends JFrame {
 
     //criando o arquivo gson
-    Gson gson = new Gson();
+   
     int codigo = 1;
     ArrayList<String> palavras_enviada = new ArrayList<>();
     String texto_enviar;//string que recebe o texto busacado
@@ -216,41 +216,7 @@ public class Cliente_machine extends JFrame {
          */
     }
 
-    public void enviar_arquivo_gson() {
-
-        Thread tsensor3 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                codigo = 1;
-                porta = 9002;
-                //criando o modelo para transformar em Json
-                Modelo modelo1 = new Modelo(codigo, palavras_enviada, texto_enviar, 9002);
-                String json = "";
-                //transformando o modelo em Json
-                json = gson.toJson(modelo1);
-                //System.out.println("Modelo transformado em Json: " + json);
-                System.out.println("Arquivo pronto para ser enviado!");
-                try {
-
-                    Socket cliente = new Socket("127.0.0.1", 9000);
-                    System.out.println("Enviando...");
-                    PrintStream saida = new PrintStream(cliente.getOutputStream());
-
-                    saida.print(json);
-
-                    saida.close();
-                    cliente.close();
-                    System.out.println("Arquivo enviado!!!");
-
-                } catch (IOException ex) {
-                    Logger.getLogger(Cliente_machine.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-        tsensor3.start();
-
-    }
-
+ 
     public void waitForClient() {
         // Checa se a transferencia foi completada com sucesso
         OutputStream socketOut = null;
