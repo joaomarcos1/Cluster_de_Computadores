@@ -5,7 +5,7 @@
  */
 package cliente_machine;
 
-import com.google.gson.Gson;
+//import com.google.gson.Gson;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
